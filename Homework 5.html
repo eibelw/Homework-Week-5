@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+    <title>Homework Week 5</title>
+    <style>
+      body {
+        background-color: #faf7f0;
+      }
+
+      input::placeholder {
+        font-size: 12px;
+      }
+
+      .card {
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row text-center">
+        <div class="col m-3">
+          <button type="button" class="btn btn-light" style="background-color: #f0dbdb" onclick="showTab('form')">Registrasi</button>
+          <button type="button" class="btn btn-light" style="background-color: #f0dbdb" onclick="showTab('table')">List Pendaftar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="form">
+      <form>
+        <section>
+          <div class="container">
+            <div class="row justify-content-center mt-2">
+              <div class="col-md-6">
+                <h2 style="text-align: center; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)">Registrasi</h2>
+                <div class="card p-3" style="background-color: #f5ebe0">
+                  <div class="form-floating mt-2 mb-2 b">
+                    <input type="text" class="form-control" id="nama" placeholder="nama" />
+                    <label for="floatingInput">Nama</label>
+                    <div class="form-text">Minimal 10 Karakter / Huruf</div>
+                  </div>
+                  <div class="form-floating mt-2 mb-2">
+                    <input type="number" class="form-control" id="umur" placeholder="umur" />
+                    <label for="floatingInput">Umur</label>
+                    <div class="form-text">Minimal 25 Tahun</div>
+                  </div>
+                  <div class="mt-2 mb-3">
+                    <label for="inputuangdisini" class="form-label">Uang Saku </label>
+                    <div class="input-group">
+                      <span class="input-group-text">Rp.</span>
+                      <input type="number" class="form-control" id="uang" />
+                    </div>
+                    <div class="form-text">Minimal Rp 100.000 - Rp 1.000.000</div>
+                  </div>
+                  <div class="text-center">
+                    <button type="button" class="btn btn-primary" onclick="inputdata()">Daftar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+
+    <section>
+      <div id="table" style="display: none">
+        <h2 style="text-align: center; text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)">List Pendaftar</h2>
+        <div class="container" style="width: 50rem">
+          <div class="card p-3" style="background-color: #f5ebe0">
+            <table class="table table-light table-stripped text-center">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Umur</th>
+                  <th>Uang Sangku</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-center align-items-center text-center">
+            <div class="card p-2 m-3" style="width: 50%; background-color: #f5ebe0">
+              <h3>Resume Pendaftar</h3>
+              <div class="d-flex justify-content-center">
+                <div class="card m-2 p-2" id="rataumur"></div>
+                <div class="spinner-border text-dark" id="loading-spinner" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="card m-2 p-2" id="ratauang"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      //menjalankan 2 tab sekaligus
+      function showTab(tabId) {
+        if (tabId === "form") {
+          document.getElementById("form").style.display = "block";
+          document.getElementById("table").style.display = "none";
+        } else if (tabId === "table") {
+          document.getElementById("form").style.display = "none";
+          document.getElementById("table").style.display = "block";
+        }
+      }
+
+      let totaluang = 0;
+      let totalumur = 0;
+      //memasukan data ke dalam table
+      function inputdata() {
+        var nama = document.getElementById("nama").value;
+        var umur = document.getElementById("umur").value;
+        var uang = document.getElementById("uang").value;
+
+        if (nama.length < 10) {
+          alert("Nama kurang dari 10 karakter!");
+          return;
+        }
+
+        if (umur < 25 || umur > 100) {
+          alert("Umur minimal adalah 25 Tahun!");
+          return;
+        }
+
+        if (uang < 100000 || uang > 1000000) {
+          alert("Uang sangku tidak masuk kriteria!");
+          return;
+        }
+
+        var table = document.querySelector("#table tbody");
+        var newcell = document.createElement("tr");
+
+        var namacell = document.createElement("td");
+        var umurcell = document.createElement("td");
+        var uangcell = document.createElement("td");
+
+        namacell.textContent = nama;
+        umurcell.textContent = umur;
+        uangcell.textContent = uang;
+
+        newcell.appendChild(namacell);
+        newcell.appendChild(umurcell);
+        newcell.appendChild(uangcell);
+
+        table.appendChild(newcell);
+
+        console.log(nama);
+        console.log(umur);
+        console.log(uang);
+
+        totalumur += parseInt(umur);
+        let rataumur = totalumur / table.rows.length;
+
+        document.getElementById("rataumur").textContent = "Rata-rata Umur  =" + rataumur + "=";
+
+        totaluang += parseInt(uang);
+        let ratauang = totaluang / table.rows.length;
+
+        document.getElementById("ratauang").textContent = "Rata-rata Uang  =" + ratauang + "=";
+
+        document.getElementById("loading-spinner").style.display = "none";
+      }
+    </script>
+  </body>
+</html>
